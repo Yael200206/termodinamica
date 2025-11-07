@@ -167,31 +167,72 @@ def cilindro_piston_electrico():
     else:
         print("Estado final: Líquido subenfriado")
 
-# ---------------- Menú principal ----------------
+# --- NUEVA FUNCIÓN DE ENTALPÍA --- #
+def calcular_entalpia():
+    """
+    Cálculo de la entalpía específica
+    """
+    print("\nCálculo de la entalpía específica")
+    try:
+        u = float(input("Ingrese la energía interna específica (kJ/kg): "))
+        P = float(input("Ingrese la presión (kPa): "))
+        v = float(input("Ingrese el volumen específico (cm³/g): "))
+        
+        # Conversión unidades
+        v_m3_kg = v * 1e-3  # cm³/g a m³/kg
+        
+        # Cálculo entalpía
+        h = u + P * v_m3_kg
+        
+        print(f"\nLa entalpía específica es: {h:.2f} kJ/kg")
+        
+    except ValueError:
+        print("Error: ingrese valores numéricos válidos")
+
+# --- MENÚ PRINCIPAL --- #
 def main_completo():
     while True:
         print("\n" + "="*50)
         print("SISTEMA DE CÁLCULOS TERMODINÁMICOS")
         print("="*50)
-        print("1. Proceso compresión dos etapas")
-        print("2. Cilindro-pistón eléctrico")
-        print("3. Cálculo toberas")
-        print("4. Boquilla agua")
-        print("5. Turbina")
+        print("1. Proceso de compresión en dos etapas")
+        print("2. Cilindro-pistón con calentamiento eléctrico")
+        print("3. Cálculo completo de toberas")
+        print("4. Boquillas para agua")
+        print("5. Turbina (código existente)")
         print("6. Calor transferido en serpentín")
-        print("7. Energía como trabajo")
-        print("8. Salir")
-        opcion = input("Seleccione opción (1-8): ")
-        if opcion=='1': proceso_compresion_dos_etapas()
-        elif opcion=='2': cilindro_piston_electrico()
-        elif opcion=='3': calculo_tobera_mejorado()
-        elif opcion=='4': calculo_boquilla_agua()
-        elif opcion=='5': main_turbina()
-        elif opcion=='6': calcular_calor_transferido()
-        elif opcion=='7': main_trabajo()
-        elif opcion=='8': break
-        else: print("Opción no válida.")
+        print("7. Energía como trabajo (sistemas cerrados)")
+        print("8. Calcular entalpía")
+        print("9. Salir")
+        print("-"*50)
+        
+        opcion = input("Seleccione una opción (1-9): ")
+        
+        if opcion == '1':
+            proceso_compresion_dos_etapas()
+        elif opcion == '2':
+            cilindro_piston_electrico()
+        elif opcion == '3':
+            calculo_tobera_mejorado()
+        elif opcion == '4':
+            calculo_boquilla_agua()
+        elif opcion == '5':
+            calcular_velocidad_salida()
+        elif opcion == '6':
+            calcular_calor_transferido()
+        elif opcion == '7':
+            # Aquí puedes llamar a la función de trabajo o energía según tu anterior main
+            main()  # opcional, si quieres mantener la turbina como ejemplo de trabajo
+        elif opcion == '8':
+            calcular_entalpia()
+        elif opcion == '9':
+            print("¡Hasta luego!")
+            break
+        else:
+            print("Opción no válida. Intente nuevamente.")
+        
         input("\nPresione Enter para continuar...")
 
-if __name__=="__main__":
+# Ejecutar el sistema completo
+if __name__ == "__main__":
     main_completo()
