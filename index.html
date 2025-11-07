@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Termodinámica U3 - Calculadora</title>
+<style>
+/* Incluí tu CSS tal cual */
+:root {
+    --primary-color: #4a6ee0;
+    --primary-dark: #3a5ac8;
+    --secondary-color: #6c63ff;
+    --light-bg: #f8f9fa;
+    --dark-text: #2d3748;
+    --light-text: #718096;
+    --white: #ffffff;
+    --user-msg-bg: #4a6ee0;
+    --bot-msg-bg: #f1f5f9;
+    --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --radius: 12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif}
+body{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.container{width:100%;max-width:900px;background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;overflow-y:auto;max-height:90vh}
+h1,h2{color:var(--primary-color);margin-bottom:15px}
+form{margin-bottom:30px}
+label{display:block;margin-bottom:5px;font-weight:600;color:var(--dark-text)}
+input{width:100%;padding:8px 12px;margin-bottom:15px;border:1px solid #ccc;border-radius:6px}
+button{padding:10px 15px;background:var(--primary-color);color:white;border:none;border-radius:8px;cursor:pointer}
+button:hover{background:var(--primary-dark)}
+.result{background:var(--light-bg);padding:15px;border-radius:8px;margin-top:10px;color:var(--dark-text)}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Calculadora Termodinámica U3</h1>
+
+    <!-- Formulario Proceso de Compresión -->
+    <h2>1. Proceso de Compresión en Dos Etapas</h2>
+    <form id="compresionForm">
+        <label>Presión Inicial (bar):</label>
+        <input type="number" step="any" id="P1">
+        <label>Presión Final (bar):</label>
+        <input type="number" step="any" id="P2">
+        <label>Temperatura Constante (°C):</label>
+        <input type="number" step="any" id="T">
+        <button type="button" onclick="procesoCompresion()">Calcular</button>
+        <div class="result" id="compresionResult"></div>
+    </form>
+
+    <!-- Formulario Cilindro-Pistón -->
+    <h2>2. Cilindro-Pistón con Calentamiento Eléctrico</h2>
+    <form id="pistonForm">
+        <label>Masa de Agua (g):</label>
+        <input type="number" step="any" id="m">
+        <label>Presión Constante (kPa):</label>
+        <input type="number" step="any" id="P">
+        <label>Corriente (A):</label>
+        <input type="number" step="any" id="I">
+        <label>Voltaje (V):</label>
+        <input type="number" step="any" id="V">
+        <label>Tiempo de Operación (min):</label>
+        <input type="number" step="any" id="t">
+        <label>Calor Perdido (kJ):</label>
+        <input type="number" step="any" id="Qperdido">
+        <button type="button" onclick="cilindroPiston()">Calcular</button>
+        <div class="result" id="pistonResult"></div>
+    </form>
+
+    <!-- Formulario Tobera -->
+    <h2>3. Tobera Convergente-Divergente</h2>
+    <form id="toberaForm">
+        <label>Diámetro Entrada (cm):</label>
+        <input type="number" step="any" id="d1">
+        <label>Presión Entrada (kPa):</label>
+        <input type="number" step="any" id="P1t">
+        <label>Temperatura Entrada (°C):</label>
+        <input type="number" step="any" id="T1t">
+        <label>Presión Salida (kPa):</label>
+        <input type="number" step="any" id="P2t">
+        <label>Temperatura Salida (°C):</label>
+        <input type="number" step="any" id="T2t">
+        <label>Velocidad Entrada (m/s):</label>
+        <input type="number" step="any" id="v1t">
+        <label>Entalpía Entrada (kJ/kg):</label>
+        <input type="number" step="any" id="h1t">
+        <label>Entalpía Salida (kJ/kg):</label>
+        <input type="number" step="any" id="h2t">
+        <label>Volumen Específico Entrada (cm³/g):</label>
+        <input type="number" step="any" id="Vesp1t">
+        <label>Volumen Específico Salida (cm³/g):</label>
+        <input type="number" step="any" id="Vesp2t">
+        <button type="button" onclick="toberaCalculo()">Calcular</button>
+        <div class="result" id="toberaResult"></div>
+    </form>
+
+</div>
+
+<script>
+// Función proceso compresión dos etapas
+function procesoCompresion() {
+    const P1 = parseFloat(document.getElementById("P1").value);
+    const P2 = parseFloat(document.getElementById("P2").value);
+    const T = parseFloat(document.getElementById("T").value);
+    const R = 8.314;
+    const Cv = 5/2 * R;
+    const Cp = 7/2 * R;
+
+    const T_k = T + 273.15;
+    const T_intermedia = T_k * (P2/P1);
+
+    const Q1 = Cv * (T_intermedia - T_k);
+    const W1 = 0;
+    const ΔU1 = Q1;
+
+    const Q2 = Cp * (T_k - T_intermedia);
+    const W2 = R * (T_k - T_intermedia);
+    const ΔU2 = Cv * (T_k - T_intermedia);
+
+    const Q_total = Q1 + Q2;
+    const W_total = W1 + W2;
+    const ΔU_total = ΔU1 + ΔU2;
+
+    document.getElementById("compresionResult").innerHTML =
+        `Temperatura intermedia: ${T_intermedia.toFixed(2)} K<br>
+        Calor total: ${Q_total.toFixed(2)} J/mol<br>
+        Trabajo total: ${W_total.toFixed(2)} J/mol<br>
+        Cambio energía interna total: ${ΔU_total.toFixed(2)} J/mol`;
+}
+
+// Función cilindro-pistón eléctrico
+function cilindroPiston() {
+    const m = parseFloat(document.getElementById("m").value)/1000;
+    const P = parseFloat(document.getElementById("P").value);
+    const I = parseFloat(document.getElementById("I").value);
+    const V = parseFloat(document.getElementById("V").value);
+    const t = parseFloat(document.getElementById("t").value) * 60;
+    const Q_perdido = parseFloat(document.getElementById("Qperdido").value) * 1000;
+
+    const Q_electrico = V * I * t;
+    const Q_neto = Q_electrico - Q_perdido;
+
+    const h1_vapor_sat = 2725.3;
+    const h1_liquido_sat = 561.47;
+    const h1 = h1_liquido_sat * 1000;
+
+    const h2 = h1 + (Q_neto / m);
+    const h2_kJ = h2 / 1000;
+
+    let estado = '';
+    let calidad = '';
+    if(h2_kJ > h1_vapor_sat) estado = "Vapor sobrecalentado";
+    else if(h2_kJ >= h1_liquido_sat) {
+        estado = "Mezcla líquido-vapor";
+        calidad = `, Calidad: ${((h2_kJ - h1_liquido_sat)/(h1_vapor_sat - h1_liquido_sat)).toFixed(3)}`;
+    } else estado = "Líquido subenfriado";
+
+    document.getElementById("pistonResult").innerHTML =
+        `Calor eléctrico suministrado: ${(Q_electrico/1000).toFixed(2)} kJ<br>
+        Calor neto al sistema: ${(Q_neto/1000).toFixed(2)} kJ<br>
+        Entalpía final: ${h2_kJ.toFixed(2)} kJ/kg<br>
+        Estado final: ${estado}${calidad}`;
+}
+
+// Función tobera
+function toberaCalculo() {
+    const d1 = parseFloat(document.getElementById("d1").value);
+    const v1 = parseFloat(document.getElementById("v1t").value);
+    const h1 = parseFloat(document.getElementById("h1t").value)*1000;
+    const h2 = parseFloat(document.getElementById("h2t").value)*1000;
+    const V_esp1 = parseFloat(document.getElementById("Vesp1t").value)/1000;
+    const V_esp2 = parseFloat(document.getElementById("Vesp2t").value)/1000;
+
+    const v2 = Math.sqrt(v1**2 + 2*(h1 - h2));
+    const A1 = (Math.PI * (d1/100)**2)/4;
+    const A2 = A1 * (v1 * V_esp2) / (v2 * V_esp1);
+    const d2 = Math.sqrt(4 * A2 / Math.PI) * 100;
+
+    document.getElementById("toberaResult").innerHTML =
+        `Velocidad de salida: ${v2.toFixed(2)} m/s<br>
+        Diámetro de salida: ${d2.toFixed(2)} cm`;
+}
+</script>
+</body>
+</html>
